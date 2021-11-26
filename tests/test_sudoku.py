@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath('.'))
 
 import pytest  # noqa: E402 # ignore that this import is not top-level
 
-from sudoku import Sudoku  # noqa: E402 # ignore that this import is not top-level
+from sudoku import Sudoku  # noqa: E402 E501 # ignore that this import is not top-level
 
 
 @pytest.fixture
@@ -72,9 +72,9 @@ def test_row_values(sudoku1):
 
 
 def test_column_values(sudoku1):
-    assert list(sorted(sudoku1.column_values(0))) == [0, 0, 0, 0, 0, 4, 6, 7, 8]
-    assert list(sorted(sudoku1.column_values(3))) == [0, 0, 0, 0, 0, 0, 3, 4, 7]
-    assert list(sorted(sudoku1.column_values(8))) == [0, 0, 0, 0, 1, 2, 4, 6, 8]
+    assert list(sorted(sudoku1.column_values(0))) == [0, 0, 0, 0, 0, 4, 6, 7, 8]  # noqa: E501
+    assert list(sorted(sudoku1.column_values(3))) == [0, 0, 0, 0, 0, 0, 3, 4, 7]  # noqa: E501
+    assert list(sorted(sudoku1.column_values(8))) == [0, 0, 0, 0, 1, 2, 4, 6, 8]  # noqa: E501
 
 
 def test_block_values(sudoku1):

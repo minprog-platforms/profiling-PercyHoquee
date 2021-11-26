@@ -39,8 +39,8 @@ def solve(sudoku: Sudoku) -> Union[Sudoku, None]:
 if __name__ == "__main__":
     # Create a command line argument parser
     parser = argparse.ArgumentParser(description='Solve a sudoku puzzle.')
-    parser.add_argument("puzzle", type=int, help="identifier of the puzzle to be solved")
-    parser.add_argument("-n", type=int, default=1, dest="number_of_runs", help="number of runs")
+    parser.add_argument("puzzle", type=int, help="identifier of the puzzle to be solved")  # noqa: E501
+    parser.add_argument("-n", type=int, default=1, dest="number_of_runs", help="number of runs")  # noqa: E501
 
     # Parse the command line arguments
     args = parser.parse_args()
