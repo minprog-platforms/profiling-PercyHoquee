@@ -162,16 +162,6 @@ class Sudoku:
 
         return representation.strip()
 
-    def zero(self) -> list[tuple]:
-        new_list = []
-
-        for i in range(9):
-            for j in range(9):
-                if self._rows[i][j] == 0:
-                    new_list.append((j, i))
-
-        return new_list
-
 
 def load_from_file(filename: str) -> Sudoku:
     """Load a Sudoku from filename."""
