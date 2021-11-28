@@ -1,35 +1,50 @@
 from __future__ import annotations
 from typing import Iterable, List
+from functools import lru_cache
 
 
 class Sudoku:
     """A mutable sudoku puzzle."""
 
     def __init__(self, puzzle: Iterable[Iterable]):
-        self._grid: list[str] = puzzle
+        self._grid: list[str] = []
+
+        for puzzle_row in puzzle:
+            row = ""
+
+            for element in puzzle_row:
+                row += str(element)
+
+            self._grid.append(row)
 
         self._rows: List[List[int]] = []
 
         self._columns: List[List[int]] = []
 
+        # initialize empty lists because multiple blocks at a time are being filled  # noqa: E501
         self._blocks: List[List[int]] = [[], [], [], [], [], [], [], [], []]
 
+        # add values in original sudoku to their position in rows, columns, and blocks  # noqa: E501
         for i in range(9):
             new_row = []
             new_column = []
 
             for j in range(9):
                 row_number = int(self._grid[i][j])
+
                 column_number = int(self._grid[j][i])
 
+                # calculates to which block certain coordinates belong
                 number_of_block = block_number(j, i)
 
                 new_row.append(row_number)
+
                 new_column.append(column_number)
 
                 self._blocks[number_of_block].append(row_number)
 
             self._rows.append(new_row)
+
             self._columns.append(new_column)
 
     def place(self, value: int, x: int, y: int) -> None:
@@ -39,6 +54,7 @@ class Sudoku:
         self._columns[x][y] = value
 
         number_of_block = block_number(x, y)
+        # calculates the index of certain coordinates in their block
         index_in_block = block_index(x, y)
 
         self._blocks[number_of_block][index_in_block] = value
@@ -56,14 +72,14 @@ class Sudoku:
 
     def value_at(self, x: int, y: int) -> int:
         """Returns the value at x,y."""
-        value = self.row_values(y)[x]
+        value = self._rows[y][x]
 
         return value
 
     def options_at(self, x: int, y: int) -> Iterable[int]:
         """Returns all possible values (options) at x,y."""
 
-        options = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        options = {1, 2, 3, 4, 5, 6, 7, 8, 9}
 
         # Remove all values from the row
         for value in self._rows[y]:
@@ -95,7 +111,7 @@ class Sudoku:
         for i in range(9):
             for j in range(9):
                 if self._rows[i][j] == 0:
-                   return j, i
+                    return j, i
 
         return next_x, next_y
 
@@ -134,6 +150,7 @@ class Sudoku:
 
         result = True
 
+        # removing first loop leads to first or last rows breaking rules
         for i in range(9):
             for value in values:
                 if value not in self.row_values(i):
@@ -147,6 +164,7 @@ class Sudoku:
 
         i = 0
 
+        # updating self._grid to solved sudoku
         for row in self._rows:
             self._grid[i] = "".join(str(digit) for digit in row)
 
@@ -163,6 +181,7 @@ class Sudoku:
         return representation.strip()
 
 
+@lru_cache(maxsize=1)
 def load_from_file(filename: str) -> Sudoku:
     """Load a Sudoku from filename."""
     puzzle: list[str] = []
@@ -179,12 +198,14 @@ def load_from_file(filename: str) -> Sudoku:
 
 
 def block_number(x: int, y: int) -> int:
+    """ returns to which block certain coordinates belong """
     number = (x // 3) + ((y // 3) * 3)
 
     return number
 
 
 def block_index(x: int, y: int) -> int:
+    """ returns the index wihtin a block of certain coordinates """
     number = (x % 3) + ((y % 3) * 3)
 
     return number
